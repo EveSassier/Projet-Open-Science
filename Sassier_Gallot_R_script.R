@@ -748,3 +748,25 @@ A_B_graphe_pvalue_sup5
 
 corrA_corrB_graphe <- ggarrange(A_B_graphe_pvalue_sup10, ncol=1, nrow=1)
 ggsave(plot = corrA_corrB_graphe, file = "corrA_corrB_graphe.pdf", width=15, height = 15, units = "cm")
+
+#### Etape 8 : Tests de Wilcoxon ####
+# On teste si les latitudes avec signal phylogénétique ont plus de précipitations/T°C/npp en moyenne par rapport aux latitudes sans signal phylogénétique
+
+ttest_A <- select(stock_tests_both_lat, nb_A, significatif_A_0.1, latitude, precipitation, temperature, npp)
+ttest_A_significatif <- filter(ttest_A, significatif_A_0.1==TRUE)
+ttest_A_non_significatif <- filter(ttest_A, significatif_A_0.1==FALSE)
+
+wilcox.test(x = ttest_A_significatif$precipitation, y = ttest_A_non_significatif$precipitation, paired=FALSE, alternative = "greater")
+wilcox.test(x = ttest_A_significatif$temperature, y = ttest_A_non_significatif$temperature, paired=FALSE, alternative = "two.sided")
+wilcox.test(x = ttest_A_significatif$npp, y = ttest_A_non_significatif$npp, paired=FALSE, alternative = "greater")
+wilcox.test(x = ttest_A_significatif$nb_A, y = ttest_A_non_significatif$nb_A, paired=FALSE, alternative = "greater")
+
+
+ttest_B <- select(stock_tests_both_lat, nb_B, significatif_B_0.1, latitude, precipitation, temperature, npp)
+ttest_B_significatif <- filter(ttest_B, significatif_B_0.1==TRUE)
+ttest_B_non_significatif <- filter(ttest_B, significatif_B_0.1==FALSE)
+
+wilcox.test(x = ttest_B_significatif$precipitation, y = ttest_B_non_significatif$precipitation, paired=FALSE, alternative = "greater")
+wilcox.test(x = ttest_B_significatif$temperature, y = ttest_B_non_significatif$temperature, paired=FALSE, alternative = "greater")
+wilcox.test(x = ttest_B_significatif$npp, y = ttest_B_non_significatif$npp, paired=FALSE, alternative = "greater")
+wilcox.test(x = ttest_B_significatif$nb_B, y = ttest_B_non_significatif$nb_B, paired=FALSE, alternative = "greater")
